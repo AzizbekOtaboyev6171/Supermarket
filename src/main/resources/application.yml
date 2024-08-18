@@ -3,12 +3,12 @@ spring:
     name: Supermarket
   datasource:
     driver-class-name: org.postgresql.Driver
-    url: jdbc:postgresql://localhost:5432/supermarket
-    username: postgres
-    password: 123
+    url: jdbc:postgresql://supermarket.cfmksuouc5as.eu-north-1.rds.amazonaws.com:5432/supermarket
+    username: database_admin
+    password: A#9sF%w4Q!8pR&kX
   jpa:
     hibernate:
-      ddl-auto: create-drop
+      ddl-auto: update
     show-sql: true
     properties:
       database-platform: org.hibernate.dialect.PostgreSQLDialect
