@@ -7,6 +7,7 @@ import com.example.supermarket.exceptions.ResourceNotFoundException;
 import com.example.supermarket.mapper.AttachmentMapper;
 import com.example.supermarket.repository.AttachmentRepository;
 import com.example.supermarket.service.AttachmentService;
+import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import org.springframework.core.io.FileSystemResource;
 import org.springframework.core.io.Resource;
@@ -15,6 +16,8 @@ import org.springframework.web.multipart.MultipartFile;
 
 import java.io.File;
 import java.io.IOException;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.UUID;
 
 @Service
@@ -24,26 +27,31 @@ public class AttachmentServiceImpl implements AttachmentService {
     private final AttachmentMapper attachmentMapper;
 
     @Override
-    public AttachmentDTO upload(MultipartFile file) {
+    @Transactional
+    public List<Long> upload(List<MultipartFile> file) {
+        List<Long> attachmentIds = new ArrayList<>();
         File folder = new File("uploads");
         if (!folder.exists()) {
             folder.mkdir();
         }
-        String fileName = UUID.randomUUID().toString();
-        File fileToSave = new File(folder.getAbsolutePath() + "/" + fileName + getExtension(file.getOriginalFilename()));
-        try {
-            file.transferTo(fileToSave);
-            Attachment attachment = new Attachment();
-            attachment.setName(file.getOriginalFilename());
-            attachment.setPath(fileToSave.getAbsolutePath());
-            attachment.setContentType(file.getContentType());
-            attachment.setExtension(getExtension(file.getOriginalFilename()));
-            attachment.setSize(file.getSize());
-            attachment = attachmentRepository.save(attachment);
-            return attachmentMapper.toDTO(attachment);
-        } catch (IOException e) {
-            throw new FileStorageException("Could not store file " + file.getOriginalFilename() + ". Please try again!", e);
+        for (MultipartFile multipartFile : file) {
+            String fileName = UUID.randomUUID().toString();
+            File fileToSave = new File(folder.getAbsolutePath() + "/" + fileName + getExtension(multipartFile.getOriginalFilename()));
+            try {
+                multipartFile.transferTo(fileToSave);
+                Attachment attachment = new Attachment();
+                attachment.setName(multipartFile.getOriginalFilename());
+                attachment.setPath(fileToSave.getAbsolutePath());
+                attachment.setContentType(multipartFile.getContentType());
+                attachment.setExtension(getExtension(multipartFile.getOriginalFilename()));
+                attachment.setSize(multipartFile.getSize());
+                attachment = attachmentRepository.save(attachment);
+                attachmentIds.add(attachment.getId());
+            } catch (IOException e) {
+                throw new FileStorageException("Could not store file " + multipartFile.getOriginalFilename() + ". Please try again!", e);
+            }
         }
+        return attachmentIds;
     }
 
     @Override

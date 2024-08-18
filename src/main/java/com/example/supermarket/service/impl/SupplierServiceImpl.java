@@ -111,12 +111,7 @@ public class SupplierServiceImpl implements SupplierService {
             attachment.setSupplier(updatedSupplier);
             attachmentRepository.save(attachment);
         }
-        SupplierBalance supplierBalance = new SupplierBalance();
-        supplierBalance.setSupplier(updatedSupplier);
-        SupplierBalance supplierBalance1 = supplierBalanceRepository.save(supplierBalance);
-        SupplierDTO supplierDTO = supplierMapper.toDTO(updatedSupplier);
-        supplierDTO.setSupplierBalanceDTO(supplierMapper.toDTO(supplierBalance1));
-        return supplierDTO;
+        return supplierMapper.toDTO(updatedSupplier);
     }
 
 
