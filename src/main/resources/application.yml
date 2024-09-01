@@ -8,7 +8,7 @@ spring:
     password: 123
   jpa:
     hibernate:
-      ddl-auto: create-drop
+      ddl-auto: update
     show-sql: true
     properties:
       database-platform: org.hibernate.dialect.PostgreSQLDialect
