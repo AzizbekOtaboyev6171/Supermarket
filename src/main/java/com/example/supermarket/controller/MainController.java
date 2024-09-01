@@ -1,11 +1,19 @@
 package com.example.supermarket.controller;
 
 import com.example.supermarket.dto.attachment.AttachmentDTO;
+import com.example.supermarket.dto.category.CategoryCreateDTO;
+import com.example.supermarket.dto.category.CategoryDTO;
+import com.example.supermarket.dto.category.CategoryUpdateDTO;
 import com.example.supermarket.dto.supplier.SupplierCreateDTO;
 import com.example.supermarket.dto.supplier.SupplierDTO;
 import com.example.supermarket.dto.supplier.SupplierUpdateDTO;
-import com.example.supermarket.service.AttachmentService;
-import com.example.supermarket.service.SupplierService;
+import com.example.supermarket.dto.unit.UnitCreateDTO;
+import com.example.supermarket.dto.unit.UnitDTO;
+import com.example.supermarket.dto.unit.UnitUpdateDTO;
+import com.example.supermarket.dto.unitTemplate.UnitTemplateCreateDTO;
+import com.example.supermarket.dto.unitTemplate.UnitTemplateDTO;
+import com.example.supermarket.dto.unitTemplate.UnitTemplateUpdateDTO;
+import com.example.supermarket.service.*;
 import io.swagger.v3.oas.annotations.Operation;
 import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -28,6 +36,15 @@ public class MainController {
 
     @Autowired
     private AttachmentService attachmentService;
+
+    @Autowired
+    private UnitTemplateService unitTemplateService;
+
+    @Autowired
+    private UnitService unitService;
+
+    @Autowired
+    private CategoryService categoryService;
 
     @PostMapping(value = "/create_supplier")
     @Operation(summary = "Create a new supplier", description = "Create a new supplier with the given details", tags = {"Supplier"})
@@ -120,5 +137,101 @@ public class MainController {
     @Operation(summary = "Check if a supplier exists by tin and id", description = "Check if a supplier exists by tin and id", tags = {"Supplier"})
     public ResponseEntity<Boolean> getSupplierByTinAndId(@PathVariable String tin, @PathVariable Long id) {
         return ResponseEntity.ok(supplierService.existsByTinAndId(tin, id));
+    }
+
+    @PostMapping("/create_unit_template")
+    @Operation(summary = "Create a new unit template", description = "Create a new unit template with the given details", tags = {"Unit Template"})
+    public ResponseEntity<UnitTemplateDTO> createUnitTemplate(@Valid @RequestBody UnitTemplateCreateDTO unitTemplateCreateDTO) {
+        return ResponseEntity.ok(unitTemplateService.createUnitTemplate(unitTemplateCreateDTO));
+    }
+
+    @PutMapping("/update_unit_template/{id}")
+    @Operation(summary = "Update a unit template", description = "Update a unit template with the given details", tags = {"Unit Template"})
+    public ResponseEntity<UnitTemplateDTO> updateUnitTemplate(@PathVariable Long id, @Valid @RequestBody UnitTemplateUpdateDTO unitTemplateUpdateDTO) {
+        return ResponseEntity.ok(unitTemplateService.updateUnitTemplate(id, unitTemplateUpdateDTO));
+    }
+
+    @GetMapping("/get_unit_template/{id}")
+    @Operation(summary = "Get a unit template", description = "Get a unit template by id", tags = {"Unit Template"})
+    public ResponseEntity<UnitTemplateDTO> getUnitTemplate(@PathVariable Long id) {
+        Optional<UnitTemplateDTO> unitTemplateDTO = unitTemplateService.findUnitTemplateById(id);
+        return unitTemplateDTO.map(ResponseEntity::ok).orElseGet(() -> ResponseEntity.notFound().build());
+    }
+
+    @GetMapping("/get_unit_templates")
+    @Operation(summary = "Get all unit templates", description = "Get all unit templates", tags = {"Unit Template"})
+    public ResponseEntity<List<UnitTemplateDTO>> getUnitTemplates() {
+        return ResponseEntity.ok(unitTemplateService.getUnitTemplateDtoList());
+    }
+
+    @DeleteMapping("/delete_unit_template/{id}")
+    @Operation(summary = "Delete a unit template", description = "Delete a unit template by id", tags = {"Unit Template"})
+    public ResponseEntity<Void> deleteUnitTemplate(@PathVariable Long id) {
+        unitTemplateService.deleteUnitTemplateById(id);
+        return ResponseEntity.noContent().build();
+    }
+
+    @PostMapping("/create_unit")
+    @Operation(summary = "Create a new unit", description = "Create a new unit with the given details", tags = {"Unit"})
+    public ResponseEntity<UnitDTO> createUnit(@Valid @RequestBody UnitCreateDTO unitCreateDTO) {
+        return ResponseEntity.ok(unitService.createUnit(unitCreateDTO));
+    }
+
+    @PutMapping("/update_unit/{id}")
+    @Operation(summary = "Update a unit", description = "Update a unit with the given details", tags = {"Unit"})
+    public ResponseEntity<UnitDTO> updateUnit(@PathVariable Long id, @Valid @RequestBody UnitUpdateDTO unitUpdateDTO) {
+        return ResponseEntity.ok(unitService.updateUnit(id, unitUpdateDTO));
+    }
+
+    @GetMapping("/get_unit/{id}")
+    @Operation(summary = "Get a unit", description = "Get a unit by id", tags = {"Unit"})
+    public ResponseEntity<UnitDTO> getUnit(@PathVariable Long id) {
+        Optional<UnitDTO> unitDTO = unitService.findUnitById(id);
+        return unitDTO.map(ResponseEntity::ok).orElseGet(() -> ResponseEntity.notFound().build());
+    }
+
+    @GetMapping("/get_units")
+    @Operation(summary = "Get all units", description = "Get all units", tags = {"Unit"})
+    public ResponseEntity<List<UnitDTO>> getUnits(@RequestParam(required = false) String keyword, @RequestParam(defaultValue = "0") int page, @RequestParam(defaultValue = "10") int size) {
+        return ResponseEntity.ok(unitService.searchActiveUnits(page, size, keyword));
+    }
+
+    @DeleteMapping("/delete_unit/{id}")
+    @Operation(summary = "Delete a unit", description = "Delete a unit by id", tags = {"Unit"})
+    public ResponseEntity<Void> deleteUnit(@PathVariable Long id) {
+        unitService.deleteUnitById(id);
+        return ResponseEntity.noContent().build();
+    }
+
+    @PostMapping("/create_category")
+    @Operation(summary = "Create a new category", description = "Create a new category with the given details", tags = {"Category"})
+    public ResponseEntity<CategoryDTO> createCategory(@Valid @RequestBody CategoryCreateDTO categoryCreateDTO) {
+        return ResponseEntity.ok(categoryService.createCategory(categoryCreateDTO));
+    }
+
+    @PutMapping("/update_category/{id}")
+    @Operation(summary = "Update a category", description = "Update a category with the given details", tags = {"Category"})
+    public ResponseEntity<CategoryDTO> updateCategory(@PathVariable Long id, @Valid @RequestBody CategoryUpdateDTO categoryUpdateDTO) {
+        return ResponseEntity.ok(categoryService.updateCategory(id, categoryUpdateDTO));
+    }
+
+    @GetMapping("/get_category/{id}")
+    @Operation(summary = "Get a category", description = "Get a category by id", tags = {"Category"})
+    public ResponseEntity<CategoryDTO> getCategory(@PathVariable Long id) {
+        Optional<CategoryDTO> categoryDTO = categoryService.findCategoryById(id);
+        return categoryDTO.map(ResponseEntity::ok).orElseGet(() -> ResponseEntity.notFound().build());
+    }
+
+    @GetMapping("/get_categories")
+    @Operation(summary = "Get all categories", description = "Get all categories", tags = {"Category"})
+    public ResponseEntity<List<CategoryDTO>> getCategories(@RequestParam(required = false) String keyword, @RequestParam(defaultValue = "0") int page, @RequestParam(defaultValue = "10") int size) {
+        return ResponseEntity.ok(categoryService.searchActiveCategories(page, size, keyword));
+    }
+
+    @DeleteMapping("/delete_category/{id}")
+    @Operation(summary = "Delete a category", description = "Delete a category by id", tags = {"Category"})
+    public ResponseEntity<Void> deleteCategory(@PathVariable Long id) {
+        categoryService.deleteCategoryById(id);
+        return ResponseEntity.noContent().build();
     }
 }
