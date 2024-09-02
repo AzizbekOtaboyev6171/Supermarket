@@ -234,4 +234,16 @@ public class MainController {
         categoryService.deleteCategoryById(id);
         return ResponseEntity.noContent().build();
     }
+
+    @GetMapping("/check_category_by_name")
+    @Operation(summary = "Check if a category exists by name", description = "Check if a category exists by name", tags = {"Category" })
+    public ResponseEntity<Boolean> getCategoryByName(@RequestParam String name) {
+        return ResponseEntity.ok(categoryService.existsByName(name));
+    }
+
+    @GetMapping("/check_category_by_name_and_id")
+    @Operation(summary = "Check if a category exists by name and id", description = "Check if a category exists by name and id", tags = {"Category" })
+    public ResponseEntity<Boolean> getCategoryByNameAndId(@RequestParam String name, @RequestParam Long id) {
+        return ResponseEntity.ok(categoryService.existsByNameAndId(name, id));
+    }
 }

@@ -13,4 +13,6 @@ public interface CategoryService {
     Optional<CategoryDTO> findCategoryById(Long id);
     void deleteCategoryById(Long id);
     List<CategoryDTO> searchActiveCategories(int page, int size, String keyword);
+    Boolean existsByName(String name);
+    Boolean existsByNameAndId(String name, Long id);
 }

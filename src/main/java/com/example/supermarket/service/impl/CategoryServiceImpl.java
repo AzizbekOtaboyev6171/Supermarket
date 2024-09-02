@@ -66,4 +66,14 @@ public class CategoryServiceImpl implements CategoryService {
         }
         return categoryRepository.searchByKeywordAndDeletedAtIsNull(keyword, pageable).map(categoryMapper::toDTO).toList();
     }
+
+    @Override
+    public Boolean existsByName(String name) {
+        return categoryRepository.existsByNameIgnoreCaseAndDeletedAtNull(name);
+    }
+
+    @Override
+    public Boolean existsByNameAndId(String name, Long id) {
+        return categoryRepository.existsByNameIgnoreCaseAndIdNotAndDeletedAtNull(name, id);
+    }
 }
