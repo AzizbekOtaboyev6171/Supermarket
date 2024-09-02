@@ -13,7 +13,7 @@ import java.util.List;
 public class SwaggerConfig {
     @Bean
     public OpenAPI customOpenAPI() {
-        Server server = new Server().url("https://3.64.194.123:8080").description("Production Server");
+        Server server = new Server().url("https://tezsavdomarket.uz").description("Production Server");
         return new OpenAPI()
                 .info(new Info().title("Supermarket API")
                         .description("This is a sample Spring Boot RESTful service leveraging springdoc-openapi with OpenAPI 3 for API documentation")
