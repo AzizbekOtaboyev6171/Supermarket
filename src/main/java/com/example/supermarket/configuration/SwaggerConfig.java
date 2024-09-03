@@ -26,6 +26,5 @@ public class SwaggerConfig {
                 .addTagsItem(new Tag().name("Product Price History").description("Methods for Product Price History"))
                 .addTagsItem(new Tag().name("Unit Template").description("Methods for Unit Template"))
                 .servers(List.of(server));
-
     }
 }
