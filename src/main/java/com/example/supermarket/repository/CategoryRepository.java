@@ -17,8 +17,10 @@ public interface CategoryRepository extends JpaRepository<Category, Long> {
     Optional<Category> findByIdAndDeletedAtIsNull(Long id);
     Integer countAllByDeletedAtIsNull();
     @Query("SELECT c FROM Category c WHERE c.deletedAt IS NULL AND " +
-            "(LOWER(c.name) LIKE LOWER(CONCAT('%', :keyword, '%')))")
+            "(LOWER(c.name) LIKE LOWER(CONCAT('%', :keyword, '%'))) " +
+            "ORDER BY c.id ASC")
     Page<Category> searchByKeywordAndDeletedAtIsNull(@Param("keyword") String keyword, Pageable pageable);
-    @Query("SELECT c FROM Category c WHERE c.deletedAt IS NULL")
+    @Query("SELECT c FROM Category c WHERE c.deletedAt IS NULL " +
+            "ORDER BY c.id ASC")
     Page<Category> findAllByDeletedAtIsNull(Pageable pageable);
 }
