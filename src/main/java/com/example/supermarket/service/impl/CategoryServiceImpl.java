@@ -76,4 +76,9 @@ public class CategoryServiceImpl implements CategoryService {
     public Boolean existsByNameAndId(String name, Long id) {
         return categoryRepository.existsByNameIgnoreCaseAndIdNotAndDeletedAtNull(name, id);
     }
+
+    @Override
+    public Integer countActiveCategories() {
+        return categoryRepository.countAllByDeletedAtIsNull();
+    }
 }

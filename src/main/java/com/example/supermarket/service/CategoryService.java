@@ -15,4 +15,5 @@ public interface CategoryService {
     List<CategoryDTO> searchActiveCategories(int page, int size, String keyword);
     Boolean existsByName(String name);
     Boolean existsByNameAndId(String name, Long id);
+    Integer countActiveCategories();
 }

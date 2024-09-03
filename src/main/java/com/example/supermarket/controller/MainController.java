@@ -246,4 +246,10 @@ public class MainController {
     public ResponseEntity<Boolean> getCategoryByNameAndId(@RequestParam String name, @RequestParam Long id) {
         return ResponseEntity.ok(categoryService.existsByNameAndId(name, id));
     }
+
+    @GetMapping("/count_active_categories")
+    @Operation(summary = "Count active categories", description = "Count active categories", tags = {"Category"})
+    public ResponseEntity<Integer> countActiveCategories() {
+        return ResponseEntity.ok(categoryService.countActiveCategories());
+    }
 }
