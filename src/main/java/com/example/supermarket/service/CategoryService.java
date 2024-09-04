@@ -12,8 +12,8 @@ public interface CategoryService {
     CategoryDTO updateCategory(Long id, CategoryUpdateDTO categoryUpdateDTO);
     Optional<CategoryDTO> findCategoryById(Long id);
     void deleteCategoryById(Long id);
-    List<CategoryDTO> searchActiveCategories(int page, int size, String keyword);
+    List<CategoryDTO> searchActiveCategories(String keyword, int page, int size, String sort, String direction);  // Sort id, name, productCount
     Boolean existsByName(String name);
     Boolean existsByNameAndId(String name, Long id);
-    Integer countActiveCategories();
+    Long countActiveCategories();
 }

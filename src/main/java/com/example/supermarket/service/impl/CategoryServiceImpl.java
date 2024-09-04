@@ -11,6 +11,7 @@ import com.example.supermarket.service.CategoryService;
 import lombok.AllArgsConstructor;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 
 import java.sql.Timestamp;
@@ -59,8 +60,8 @@ public class CategoryServiceImpl implements CategoryService {
     }
 
     @Override
-    public List<CategoryDTO> searchActiveCategories(int page, int size, String keyword) {
-        Pageable pageable = PageRequest.of(page, size);
+    public List<CategoryDTO> searchActiveCategories(String keyword, int page, int size, String sort, String direction) {
+        Pageable pageable = PageRequest.of(page, size, Sort.by(Sort.Direction.fromString(direction), sort));
         if (keyword == null || keyword.isEmpty()) {
             return categoryRepository.findAllByDeletedAtIsNull(pageable).map(categoryMapper::toDTO).toList();
         }
@@ -78,7 +79,7 @@ public class CategoryServiceImpl implements CategoryService {
     }
 
     @Override
-    public Integer countActiveCategories() {
+    public Long countActiveCategories() {
         return categoryRepository.countAllByDeletedAtIsNull();
     }
 }

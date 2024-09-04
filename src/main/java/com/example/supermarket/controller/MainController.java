@@ -224,8 +224,8 @@ public class MainController {
 
     @GetMapping("/get_categories")
     @Operation(summary = "Get all categories", description = "Get all categories", tags = {"Category"})
-    public ResponseEntity<List<CategoryDTO>> getCategories(@RequestParam(required = false) String keyword, @RequestParam(defaultValue = "0") int page, @RequestParam(defaultValue = "10") int size) {
-        return ResponseEntity.ok(categoryService.searchActiveCategories(page, size, keyword));
+    public ResponseEntity<List<CategoryDTO>> getCategories(@RequestParam(required = false) String keyword, @RequestParam(defaultValue = "0") int page, @RequestParam(defaultValue = "10") int size, @RequestParam(defaultValue = "id") String sort, @RequestParam(defaultValue = "DESC") String direction) {
+        return ResponseEntity.ok(categoryService.searchActiveCategories(keyword, page, size, sort, direction));
     }
 
     @DeleteMapping("/delete_category/{id}")
@@ -249,7 +249,7 @@ public class MainController {
 
     @GetMapping("/count_active_categories")
     @Operation(summary = "Count active categories", description = "Count active categories", tags = {"Category"})
-    public ResponseEntity<Integer> countActiveCategories() {
+    public ResponseEntity<Long> countActiveCategories() {
         return ResponseEntity.ok(categoryService.countActiveCategories());
     }
 }

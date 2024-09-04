@@ -37,10 +37,10 @@ public class SupplierServiceImpl implements SupplierService {
     @Override
     @Transactional
     public SupplierDTO create(SupplierCreateDTO supplierCreateDTO) {
-        if (supplierRepository.existsByNameIgnoreCase(supplierCreateDTO.getName())) {
+        if (supplierRepository.existsByNameIgnoreCaseAndDeletedAtNull(supplierCreateDTO.getName())) {
             throw new ResourceAlreadyExistsException("Supplier with this name already exists");
         }
-        if (supplierRepository.existsByTinIgnoreCase(supplierCreateDTO.getTin())) {
+        if (supplierRepository.existsByTinIgnoreCaseAndDeletedAtNull(supplierCreateDTO.getTin())) {
             throw new ResourceAlreadyExistsException("Supplier with this TIN already exists");
         }
         List<Attachment> attachmentList = new ArrayList<>();
@@ -81,10 +81,10 @@ public class SupplierServiceImpl implements SupplierService {
     @Transactional
     public SupplierDTO update(Long id, SupplierUpdateDTO supplierUpdateDTO) {
         Supplier supplier = supplierRepository.findById(id).orElseThrow(() -> new ResourceNotFoundException("Supplier not found"));
-        if (supplierRepository.existsByNameIgnoreCaseAndIdNot(supplierUpdateDTO.getName(), id)) {
+        if (supplierRepository.existsByNameIgnoreCaseAndIdNotAndDeletedAtNull(supplierUpdateDTO.getName(), id)) {
             throw new ResourceAlreadyExistsException("Supplier with this name already exists");
         }
-        if (supplierRepository.existsByTinIgnoreCaseAndIdNot(supplierUpdateDTO.getTin(), id)) {
+        if (supplierRepository.existsByTinIgnoreCaseAndIdNotAndDeletedAtNull(supplierUpdateDTO.getTin(), id)) {
             throw new ResourceAlreadyExistsException("Supplier with this TIN already exists");
         }
         List<Attachment> attachmentList = new ArrayList<>();
@@ -160,21 +160,21 @@ public class SupplierServiceImpl implements SupplierService {
 
     @Override
     public Boolean existsByName(String name) {
-        return supplierRepository.existsByNameIgnoreCase(name);
+        return supplierRepository.existsByNameIgnoreCaseAndDeletedAtNull(name);
     }
 
     @Override
     public Boolean existsByNameAndId(String name, Long id) {
-        return supplierRepository.existsByNameIgnoreCaseAndIdNot(name, id);
+        return supplierRepository.existsByNameIgnoreCaseAndIdNotAndDeletedAtNull(name, id);
     }
 
     @Override
     public Boolean existsByTin(String tin) {
-        return supplierRepository.existsByTinIgnoreCase(tin);
+        return supplierRepository.existsByTinIgnoreCaseAndDeletedAtNull(tin);
     }
 
     @Override
     public Boolean existsByTinAndId(String tin, Long id) {
-        return supplierRepository.existsByTinIgnoreCaseAndIdNot(tin, id);
+        return supplierRepository.existsByTinIgnoreCaseAndIdNotAndDeletedAtNull(tin, id);
     }
 }
